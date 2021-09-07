@@ -1,0 +1,9 @@
+[
+  {
+    "username": "test",
+    "password": "Test@!23",
+    "fullName": "Im Real SuperAdmin",
+    "phone": "0123456789",
+    "role": "super-admin"
+  }
+]
