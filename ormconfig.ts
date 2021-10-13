@@ -1,6 +1,6 @@
 import * as dotenv from 'dotenv';
-import { StringUtils } from './src/common/utils';
 import { ConnectionOptions } from 'typeorm-seeding';
+import { StringUtils } from './src/common/utils';
 
 dotenv.config({
   path: `.env.${process.env.NODE_ENV || 'development'}`,

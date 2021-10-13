@@ -83,7 +83,6 @@ export class AuthService {
         refreshToken,
         `refresh_${this.configService.get('secret')}`,
       );
-      console.log('----------------------------------', accessTokenDataObj);
       const user = await this.userRepository.findOne(accessTokenDataObj.userId);
       if (!user) {
         throw new InvalidTokenError();

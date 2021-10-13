@@ -1,10 +1,9 @@
-import { CacheInterceptor, CacheModule, Module } from '@nestjs/common';
-import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
+import { CacheInterceptor, Module } from '@nestjs/common';
+import { APP_INTERCEPTOR } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
-
 import configuration, { EnvConfiguration } from '@config/configuration';
+
 import { AdminApiModule } from './modules/admin-api/admin-api.module';
 import { UserApiModule } from './modules/user-api/user-api.module';
 
@@ -13,26 +12,6 @@ import { UserApiModule } from './modules/user-api/user-api.module';
     ConfigModule.forRoot({
       envFilePath: [`.env.${process.env.NODE_ENV}.local`, `.env.${process.env.NODE_ENV}`],
       load: [configuration],
-    }),
-    ThrottlerModule.forRootAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: (configService: ConfigService<EnvConfiguration>) => {
-        return {
-          ttl: configService.get('throttleTTL'),
-          limit: configService.get('throttleLimit'),
-        };
-      },
-    }),
-    CacheModule.registerAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: (configService: ConfigService<EnvConfiguration>) => {
-        return {
-          ttl: configService.get('cacheRequestTTL'),
-          max: configService.get('cacheRequestMax'),
-        };
-      },
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
@@ -57,10 +36,6 @@ import { UserApiModule } from './modules/user-api/user-api.module';
   ],
   controllers: [],
   providers: [
-    {
-      provide: APP_GUARD,
-      useClass: ThrottlerGuard,
-    },
     {
       provide: APP_INTERCEPTOR,
       useClass: CacheInterceptor,
